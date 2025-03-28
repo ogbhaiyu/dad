@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thinking Of You...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Basic Reset & Font Import */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fde4e4 0%, #fad0c4 100%); /* Soft pink/peach gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            position: relative; /* Needed for absolute positioned hearts */
+        }
+
+        /* Card Styling */
+        .card-container {
+            perspective: 1000px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInCard 1s ease-out 0.5s forwards;
+            overflow: hidden; /* Contain hearts within card if needed */
+        }
+
+        @keyframes fadeInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #e85a71;
+            font-size: 2.8em;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .question {
+            font-weight: 400;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            font-size: 1.2em;
+        }
+
+        .highlight {
+            background-color: #fde4e4;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #e85a71;
+        }
+
+        .separator {
+            font-size: 1.5em;
+            color: #f8b195;
+            margin: 30px 0;
+            opacity: 0.7;
+        }
+
+        .closing {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #e85a71;
+            font-style: italic;
+        }
+
+        /* Interaction Elements */
+        .reveal-button {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8b195; /* Peach */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reveal-button:hover {
+            background-color: #e85a71; /* Pink on hover */
+            transform: translateY(-2px);
+        }
+
+        .reveal-button:active {
+             transform: translateY(0px);
+             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dad-joke-section {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-in-out, opacity 0.6s ease-in 0.2s; /* Delay opacity */
+        }
+
+        .dad-joke-section.visible {
+            max-height: 500px; /* Set high enough to contain content */
+            opacity: 1;
+            margin-top: 25px; /* Add some space when revealed */
+        }
+
+        .apology {
+            color: #777;
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+
+        /* Floating Hearts Animation (Background) */
+        .hearts-bg {
+            position: fixed; /* Fixed position to cover viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1; /* Behind everything */
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(232, 90, 113, 0.3); /* Semi-transparent pink */
+            opacity: 0;
+            animation: float 10s infinite ease-in-out;
+            transform: rotate(-45deg); /* Create heart shape */
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+
+        .heart::before { top: -10px; left: 0; }
+        .heart::after { top: 0; left: 10px; }
+
+        /* Variations */
+        .heart.h1 { left: 10%; animation-delay: 0s; animation-duration: 12s; --scale: 0.8; }
+        .heart.h2 { left: 85%; animation-delay: 2s; animation-duration: 9s; background-color: rgba(248, 177, 149, 0.3); --scale: 1.1; }
+        .heart.h3 { left: 40%; animation-delay: 5s; animation-duration: 15s; --scale: 0.6; }
+        .heart.h4 { left: 60%; animation-delay: 7s; animation-duration: 11s; background-color: rgba(255, 200, 200, 0.3); --scale: 0.9; }
+        .heart.h5 { left: 25%; animation-delay: 1s; animation-duration: 14s; --scale: 0.7; }
+
+
+        @keyframes float {
+             0% {
+                bottom: -50px;
+                opacity: 0;
+                transform: translateX(0) rotate(-45deg) scale(var(--scale, 1));
+            }
+            20% {
+                opacity: 0.7;
+                transform: translateX(20px) rotate(-30deg) scale(var(--scale, 1));
+            }
+            80% {
+                opacity: 0.7;
+                transform: translateX(-20px) rotate(-60deg) scale(var(--scale, 1));
+            }
+            100% {
+                bottom: 105%;
+                opacity: 0;
+                transform: translateX(0) rotate(-45deg) scale(var(--scale, 1));
+            }
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .card {
+                padding: 30px 25px;
+            }
+            h1 {
+                font-size: 2.4em;
+            }
+            p {
+                font-size: 1em;
+            }
+            .question {
+                font-size: 1.1em;
+            }
+            .reveal-button {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Hearts -->
+    <div class="hearts-bg">
+        <div class="heart h1"></div>
+        <div class="heart h2"></div>
+        <div class="heart h3"></div>
+        <div class="heart h4"></div>
+        <div class="heart h5"></div>
+    </div>
+
+    <div class="card-container">
+        <div class="card">
+            <h1>Hey You! ✨</h1>
+
+            <p>Just checking in because I was thinking about you...</p>
+
+            <p class="question day" id="day-question">
+                How was your <span class="highlight">day</span> today?
+            </p>
+
+            <button class="reveal-button" id="reveal-btn">Okay, but about that typo...</button>
+
+            <div class="dad-joke-section" id="dad-section">
+                <p class="separator">~~~ ❤️ ~~~</p>
+                <p class="apology">
+                    And really sorry again about mixing up 'day' and 'dad' before! 😅
+                </p>
+                <p>
+                    But... since I *did* accidentally ask, and I hope you're laughing with me:
+                </p>
+                <p class="question dad">
+                    How *is* your <span class="highlight">dad</span> doing? 😉
+                </p>
+                <p class="closing">
+                    Hope both are absolutely wonderful!
+                    <br>
+                    Thinking of you lots.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Goes Here -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Page loaded, thinking of you! 😉");
+
+            const revealButton = document.getElementById('reveal-btn');
+            const dadSection = document.getElementById('dad-section');
+
+            if (revealButton && dadSection) {
+                revealButton.addEventListener('click', () => {
+                    console.log("Button clicked!");
+                    // Add 'visible' class to trigger CSS transition
+                    dadSection.classList.add('visible');
+
+                    // Hide the button after clicking
+                    revealButton.style.display = 'none';
+
+                     // Optional: Scroll smoothly to the revealed section if needed
+                     // setTimeout(() => {
+                     //    dadSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                     // }, 600); // Delay slightly longer than transition start
+                });
+            } else {
+                console.error("Button or Dad Section not found!");
+            }
+        });
+    </script>
+</body>
+</html>
